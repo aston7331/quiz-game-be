@@ -22,7 +22,7 @@ def save_to_local(data):
 
 origins = ["*"]  # Replace with your frontend origin
 app.add_middleware(
-    CORSMiddleware, allow_origins=origins, allow_methods=["*"], allow_headers=["*"]
+    CORSMiddleware, allow_origins=origins, allow_methods=["POST"], allow_headers=["Content-Type"]
 )
 
 
