@@ -78,20 +78,35 @@ function saveToLocal(data) {
 }
 
 // Routes
-app.post("/add_user", (req, res) => {
+// app.post("/add_user", (req, res) => {
+//     const localData = getLocalData();
+//     const users = localData.users || [];
+//     const { name } = req.body;
+
+//     if (users.some(user => user.name === name)) {
+//         return res.status(400).json({ message: "User already exists" });
+//     }
+
+//     users.push({ name });
+//     localData.users = users;
+//     saveToLocal(localData);
+//     res.json({ message: "User added successfully", user: name });
+// });
+
+app.get("/add_user", (req, res) => {
+    // Security Warning: This approach exposes data in the URL
+    const name = req.query.name; // Access data from URL parameters
+  
+    // Check if user exists (limited by URL length)
     const localData = getLocalData();
     const users = localData.users || [];
-    const { name } = req.body;
-
     if (users.some(user => user.name === name)) {
-        return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ message: "User already exists" });
     }
-
-    users.push({ name });
-    localData.users = users;
-    saveToLocal(localData);
-    res.json({ message: "User added successfully", user: name });
-});
+  
+    // Not possible to add user with GET request (security risk)
+    return res.status(405).json({ message: "Adding users requires a POST request" });
+  });
 
 app.get("/questions", (req, res) => {
     res.json(questions);
