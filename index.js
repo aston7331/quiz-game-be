@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const app = express();
 const PORT = 8080;
@@ -9,12 +10,7 @@ const PORT = 8080;
 app.use(bodyParser.json());
 
 // CORS Headers
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    next();
-});
+app.use(cors());
 
 // In-memory data
 let questions = [
@@ -115,15 +111,15 @@ app.post("/submit-answer", (req, res) => {
 //     console.log(req, name)
 //     const localData = getLocalData();
 //     const answers = localData.answers || [];
-    
+
 //     // console.log(answers,"fgh",localData,"drtfg", name ,"1")
 //     const filteredAnswers = name ? answers.filter(answer => answer.name === name) : answers;
 //     // console.log(filteredAnswers," 2")
 
- 
+
 //     const score = filteredAnswers.filter(answer => answer.correct).length;
 //     // console.log(score, "3")
-    
+
 //     res.json({ score });
 // });
 
@@ -135,7 +131,7 @@ app.post("/score", (req, res) => {
     const answers = localData.answers || [];
 
     // Filter answers based on the provided name or name
-    const filteredAnswers = answers.filter(answer =>  answer.name === name);
+    const filteredAnswers = answers.filter(answer => answer.name === name);
 
     // Calculate score based on correct answers
     const score = filteredAnswers.filter(answer => answer.correct).length;
