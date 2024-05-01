@@ -10,9 +10,17 @@ const PORT = 8080;
 app.use(bodyParser.json());
 
 // CORS Headers
+// app.use(cors({
+//     allowedHeaders: '*',
+//     origin:'*'
+// }));
+
 app.use(cors({
-    allowedHeaders: '*',
-    origin:'*'
+    origin: "*",
+    headers: {
+        "Access-Control-Allow-Origin": "https://slug-panel.onrender.com", // incorrect
+        "Access-Control-Allow-Credentials": true // incorrect
+    },
 }));
 
 // In-memory data
