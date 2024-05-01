@@ -10,7 +10,10 @@ const PORT = 8080;
 app.use(bodyParser.json());
 
 // CORS Headers
-app.use(cors());
+app.use(cors({
+    allowedHeaders: '*',
+    origin:'*'
+}));
 
 // In-memory data
 let questions = [
