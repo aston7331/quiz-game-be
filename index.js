@@ -10,17 +10,9 @@ const PORT = 8080;
 app.use(bodyParser.json());
 
 // CORS Headers
-// app.use(cors({
-//     allowedHeaders: '*',
-//     origin:'*'
-// }));
-
 app.use(cors({
-    origin: "*",
-    headers: {
-        "Access-Control-Allow-Origin": "https://slug-panel.onrender.com", // incorrect
-        "Access-Control-Allow-Credentials": true // incorrect
-    },
+    allowedHeaders: '*',
+    origin:'*'
 }));
 
 // In-memory data
@@ -33,18 +25,18 @@ let questions = [
         id: 2, category: "AI", question: "Which of the given language is not commonly used for AI?",
         answer: "Perl", distractors: ["LISP", "PROLOG", "Python", "Perl"]
     },
-    // {
-    //     id: 3, category: "AI", question: "A technique that was developed to determine whether a machine could or could not demonstrate the artificial intelligence known as the___",
-    //     answer: "Turing Test", distractors: ["Boolean Algebra", "Turing Test", "Logarithm", "Algorithm"]
-    // },
-    // {
-    //     id: 4, category: "AI", question: "The component of an Expert system is_________.",
-    //     answer: "All of the above", distractors: ["Knowledge Base", "Inference Engine", "User Interface", "All of the above"]
-    // },
-    // {
-    //     id: 5, category: "AI", question: "Which algorithm is used in the Game tree to make decisions of Win/Lose?",
-    //     answer: "Min/Max algorithm", distractors: ["Heuristic Search Algorithm", "DFS/BFS algorithm", "Greedy Search Algorithm", "Min/Max algorithm"]
-    // },
+    {
+        id: 3, category: "AI", question: "A technique that was developed to determine whether a machine could or could not demonstrate the artificial intelligence known as the___",
+        answer: "Turing Test", distractors: ["Boolean Algebra", "Turing Test", "Logarithm", "Algorithm"]
+    },
+    {
+        id: 4, category: "AI", question: "The component of an Expert system is_________.",
+        answer: "All of the above", distractors: ["Knowledge Base", "Inference Engine", "User Interface", "All of the above"]
+    },
+    {
+        id: 5, category: "AI", question: "Which algorithm is used in the Game tree to make decisions of Win/Lose?",
+        answer: "Min/Max algorithm", distractors: ["Heuristic Search Algorithm", "DFS/BFS algorithm", "Greedy Search Algorithm", "Min/Max algorithm"]
+    },
     // {
     //     id: 6, category: "AI", question: "The available ways to solve a problem of state-space-search.",
     //     answer: "4", distractors: ["1", "2", "3", "4"]
@@ -78,38 +70,23 @@ function saveToLocal(data) {
 }
 
 // Routes
-// app.post("/add_user", (req, res) => {
-//     const localData = getLocalData();
-//     const users = localData.users || [];
-//     const { name } = req.body;
-
-//     if (users.some(user => user.name === name)) {
-//         return res.status(400).json({ message: "User already exists" });
-//     }
-
-//     users.push({ name });
-//     localData.users = users;
-//     saveToLocal(localData);
-//     res.json({ message: "User added successfully", user: name });
-// });
-
-app.get("/add_user", (req, res) => {
-    // Security Warning: This approach exposes data in the URL
-    const name = req.query.name; // Access data from URL parameters
-  
-    // Check if user exists (limited by URL length)
+app.post("/add_user", (req, res) => {
     const localData = getLocalData();
     const users = localData.users || [];
+    const { name } = req.body;
+
     if (users.some(user => user.name === name)) {
-      return res.status(400).json({ message: "User already exists" });
+        return res.status(400).json({ message: "User already exists" });
     }
-  
-    // Not possible to add user with GET request (security risk)
-    return res.status(405).json({ message: "Adding users requires a POST request" });
-  });
+
+    users.push({ name });
+    localData.users = users;
+    saveToLocal(localData);
+    res.json({ message: "User added successfully", user: name });
+});
 
 app.get("/questions", (req, res) => {
-    res.json(questions);
+    res.send(questions);
 });
 
 app.post("/submit-answer", (req, res) => {
@@ -150,14 +127,12 @@ app.post("/submit-answer", (req, res) => {
 // });
 
 
-app.post("/score", (req, res) => {
-    // const {  name } = req.body;
-    console.log(req, "name")
+app.post("/score/:name", (req, res) => {
     const localData = getLocalData();
     const answers = localData.answers || [];
 
     // Filter answers based on the provided name or name
-    const filteredAnswers = answers.filter(answer => answer.name === name);
+    const filteredAnswers = answers.filter(answer => answer.name === req?.params?.name);
 
     // Calculate score based on correct answers
     const score = filteredAnswers.filter(answer => answer.correct).length;
