@@ -71,6 +71,7 @@ function saveToLocal(data) {
 
 // Routes
 app.post("/add_user", (req, res) => {
+    console.log("first")
     const localData = getLocalData();
     const users = localData.users || [];
     const { name } = req.body;
